@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const TopFiveSchema = new mongoose.Schema({
   name: {
@@ -20,7 +21,6 @@ const TopFiveSchema = new mongoose.Schema({
       },
       photo: {
         type: String,
-        default: 'no-photo.jpg',
       },
     },
   ],
@@ -28,6 +28,15 @@ const TopFiveSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  photo: {
+    type: String,
+  },
+});
+
+// Create Top Five from slug
+TopFiveSchema.pre('save', function () {
+  this.slug = slugify(this.name, { lower: true });
+  next();
 });
 
 module.exports = mongoose.model('TopFiveSchema', TopFiveSchema);
