@@ -13,12 +13,12 @@ exports.getTopFives = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.getOneTopFive = asyncHandler(async (req, res, next) => {
-  const singleTopFive = await TopFive.findById();
-  res
-    .status(200)
-    .json({ success: true, count: singleTopFive.length, data: singleTopFive });
-});
+// exports.getOneTopFive = asyncHandler(async (req, res, next) => {
+//   const singleTopFive = await TopFive.findOne();
+//   res
+//     .status(200)
+//     .json({ success: true, count: singleTopFive.length, data: singleTopFive });
+// });
 
 exports.getTopFive = asyncHandler(async (req, res, next) => {
   const singleTopFive = await TopFive.findById(req.params.id);

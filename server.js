@@ -15,6 +15,7 @@ connectDB();
 
 // Route files
 const topfives = require('./routes/topfives');
+const auth = require('./routes/auth');
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Mount Routers
 
 app.use('/api/v1/topfives', topfives);
+app.use('/api/v1/auth', auth);
 
 app.use(errorHandler);
 

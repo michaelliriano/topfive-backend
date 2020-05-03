@@ -15,7 +15,7 @@ router.route('/').get(getTopFives).post(createTopFive);
 
 router.route('/:id').get(getTopFive).put(updateTopFive).delete(deleteTopFive);
 
-router.route('/topItem').get(getOneTopFive);
+// router.route('/topItem').get(getOneTopFive);
 
 router.route('/:id/photo').put(topfivePhotoUpload);
 
