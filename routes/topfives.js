@@ -11,12 +11,18 @@ const {
 
 const router = express.Router();
 
-router.route('/').get(getTopFives).post(createTopFive);
+const { protect } = require('../middleware/auth');
 
-router.route('/:id').get(getTopFive).put(updateTopFive).delete(deleteTopFive);
+router.route('/').get(getTopFives).post(protect, createTopFive);
+
+router
+  .route('/:id')
+  .get(getTopFive)
+  .put(protect, updateTopFive)
+  .delete(protect, deleteTopFive);
 
 // router.route('/topItem').get(getOneTopFive);
 
-router.route('/:id/photo').put(topfivePhotoUpload);
+router.route('/:id/photo').put(protect, topfivePhotoUpload);
 
 module.exports = router;
