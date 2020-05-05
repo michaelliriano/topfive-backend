@@ -31,6 +31,10 @@ exports.getTopFive = asyncHandler(async (req, res, next) => {
 });
 
 exports.createTopFive = asyncHandler(async (req, res, next) => {
+  // Add User to req.body
+
+  req.body.user = req.user.id;
+
   const topfive = await TopFive.create(req.body);
   res.status(201).json({
     success: true,
@@ -39,41 +43,68 @@ exports.createTopFive = asyncHandler(async (req, res, next) => {
 });
 
 exports.updateTopFive = asyncHandler(async (req, res, next) => {
-  const topfive = await TopFive.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  let topfive = await TopFive.findById(req.params.id);
   if (!topfive) {
     return next(
       new ErrorResponse(`Top Five not found with ID of ${req.params.id}`, 404)
     );
   }
+  // Make sure User is top five owner
+  if (topfive.user.toString() !== req.user.id) {
+    return next(
+      new ErrorResponse(
+        `User ${req.params.id} is not authorized to update this Top Five`,
+        401
+      )
+    );
+  }
+  topfive = await TopFive.findOneAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({ success: true, data: topfive });
 });
 
 exports.deleteTopFive = asyncHandler(async (req, res, next) => {
-  const topfive = await TopFive.findByIdAndDelete(req.params.id);
+  const topfive = await TopFive.findById(req.params.id);
   if (!topfive) {
     return next(
       new ErrorResponse(`Top Five not found with ID of ${req.params.id}`, 404)
     );
   }
+  // Make sure User is top five owner
+  if (topfive.user.toString() !== req.user.id) {
+    return next(
+      new ErrorResponse(
+        `User ${req.params.id} is not authorized to update this Top Five`,
+        401
+      )
+    );
+  }
 
+  topfive.remove();
   res.status(200).json({ success: true, data: {} });
 });
 
 // upload a picture
 
 exports.topfivePhotoUpload = asyncHandler(async (req, res, next) => {
-  const topfive = await TopFive.findById(req.params.id, {
-    new: true,
-    runValidators: true,
-  });
+  const topfive = await TopFive.findById(req.params.id);
 
   if (!topfive) {
     return next(
       new ErrorResponse(`Top Five not found with ID of ${req.params.id}`, 404)
+    );
+  }
+
+  // Make sure User is top five owner
+  if (topfive.user.toString() !== req.user.id) {
+    return next(
+      new ErrorResponse(
+        `User ${req.params.id} is not authorized to udpate this Top Five`,
+        401
+      )
     );
   }
 

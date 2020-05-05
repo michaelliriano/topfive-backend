@@ -31,6 +31,11 @@ const TopFiveSchema = new mongoose.Schema({
   photo: {
     type: String,
   },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
 // Create Top Five from slug
